@@ -56,7 +56,7 @@
             @Html.DisplayFor(modelItem => item.HomePhone)
         </td>
         <td>
-            <img src="@string.Format("data:image;base64,{0}", Convert.ToBase64String(item.Photo,78,item.Photo.Length - 78))" />
+            <img src="@item.PhotoBase64" />
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.EmployeeID }) |

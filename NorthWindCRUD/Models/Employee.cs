@@ -73,10 +73,14 @@ namespace NorthWindCRUD.Models
         [Column(TypeName = "image")]
         public byte[] Photo { get; set; }
 
+        public string PhotoBase64 { get => string.Format("data:image;base64,{0}", Convert.ToBase64String(Photo, 78, Photo.Length - 78)); }
+
         [Column(TypeName = "ntext")]
         public string Notes { get; set; }
 
+        [ForeignKey("ReportsEmployee")]
         public int? ReportsTo { get; set; }
+        public virtual Employee ReportsEmployee { get; set; }
 
         [StringLength(255)]
         public string PhotoPath { get; set; }
