@@ -29,11 +29,6 @@ namespace NorthWindCRUD.Models
                 .Property(e => e.CustomerID)
                 .IsFixedLength();
 
-            modelBuilder.Entity<Employee>()
-                .HasMany(e => e.Employees1)
-                .WithOptional(e => e.Employee1)
-                .HasForeignKey(e => e.ReportsTo);
-
             modelBuilder.Entity<Order_Detail>()
                 .Property(e => e.UnitPrice)
                 .HasPrecision(19, 4);
