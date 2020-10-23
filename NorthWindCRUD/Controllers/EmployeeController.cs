@@ -20,24 +20,36 @@ namespace NorthWindCRUD.Controllers
         [HttpGet]
         public ActionResult Delete(int? id)
         {
-            if (id.HasValue)
-            {
-                Context context = new Context();
-                var employee = context.Employees.FirstOrDefault(x => x.EmployeeID == id);
-                return View(employee);
-            }
-            return Redirect("Employee");
+            if (!id.HasValue)
+                return Redirect("/Employee");
+            Context context = new Context();
+            var employee = context.Employees.FirstOrDefault(x => x.EmployeeID == id);
+            return View(employee);
         }
 
         [ActionName("Delete")]
         [HttpPost]
         public ActionResult Delete_Post(int? id)
         {
+            if (id.HasValue)
+                return Content($"{id} cannot be null");
+
             Context context = new Context();
             var employee = context.Employees.FirstOrDefault(x => x.EmployeeID == id);
+            if (employee == null)
+                return Content($"There is no employee which id is {id}");
             context.Employees.Remove(employee);
             //context.SaveChanges();
             return Redirect("/Employee");
+        }
+
+        public ActionResult Details(int? id)
+        {
+            if (!id.HasValue)
+                return Redirect("/Employee");
+            Context context = new Context();
+            var employee = context.Employees.FirstOrDefault(x => x.EmployeeID == id);
+            return View(employee);
         }
     }
 }
