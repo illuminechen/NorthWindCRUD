@@ -11,7 +11,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>employeeDto</h4>
+        <h4>employee</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.employeeDto.EmployeeID)
@@ -123,11 +123,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.employeeDto.PhotoBase64, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <div style="text-align:center;width:280px">
-                    <img id="employeeDtoPhoto" src="@Model.employeeDto.PhotoBase64" style="max-width:280px" />
-                </div>
-                <input type="file" id="selectedFile" accept="image/*" onchange="uploadPhoto(event)" style="display: none;" />
-                <input type="button" class="form-control" value="Browse..." onclick="$('#selectedFile').trigger('click');" />
+                @Html.EditorFor(model => model.employeeDto.PhotoBase64, new { htmlAttributes = new { name = "employeeDto.PhotoBase64", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.employeeDto.PhotoBase64, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -140,10 +137,11 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.employeeDto.ReportsTo, "ReportsTo", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.employeeDto.IntReportsTo, "ReportsTo", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("ReportsTo", new SelectList(Model.reportCandidates.Values, Model.reportCandidates.Values), htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.employeeDto.ReportsTo, "", new { @class = "text-danger" })
+                @Html.DropDownListFor(model => model.employeeDto.IntReportsTo, new SelectList(Model.reportCandidates, "Key","Value", Model.employeeDto.IntReportsTo),"-", htmlAttributes: new { @class = "form-control",
+           })
+                @Html.ValidationMessageFor(model => model.employeeDto.IntReportsTo, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -166,19 +164,26 @@
 <div>
     @Html.ValidationMessageFor(model => model.employeeDto.Notes, "", new { @class = "text-danger" })
 </div>
-
-<script type="text/javascript">
-    function uploadPhoto(event) {
-        var selectedFile = event.target.files[0];
-        var reader = new FileReader();
-        let imgTag = $("#employeeDtoPhoto");
-        if (reader && selectedFile) {
-            reader.onload = function (event) {
-                imgTag[0].src = event.target.result;
-            };
-            reader.readAsDataURL(event.target.files[0]);
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "yy/m/d"
+            });
+        });
+        function uploadPhoto(event) {
+            var selectedFile = event.target.files[0];
+            var reader = new FileReader();
+            let imgTag = $(event.target).prev();
+            let valueTag = $(event.target).next();
+            if (reader && selectedFile) {
+                reader.onload = function (event) {
+                    imgTag[0].src = event.target.result;
+                    valueTag[0].value = event.target.result;
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            }
         }
-    }
-</script>
-
+    </script>
+}
 

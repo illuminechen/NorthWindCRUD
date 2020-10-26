@@ -33,6 +33,9 @@ namespace NorthWindCRUD.Controllers
             if (!id.HasValue)
                 return RedirectToAction("Index");
             var employee = _context.Employees.FirstOrDefault(x => x.EmployeeID == id);
+            //Dictionary<int, string> dict = new Dictionary<int, string>() { { 0, "-" } };
+
+            //_context.Employees.Where(x => x.EmployeeID != id).ToList().ForEach(x => dict[x.EmployeeID] = x.CommonName);
 
             EditEmployeeViewModel viewModel = new EditEmployeeViewModel()
             {

@@ -1,0 +1,16 @@
+﻿@{
+    var htmlAttrib = ViewData["htmlAttributes"];
+    IDictionary<string, object> dic = new RouteValueDictionary(htmlAttrib);
+
+    dic.Add("autocomplete", "off");
+    if (!dic.ContainsKey("class")) { dic.Add("class", ""); }
+
+    string classes = dic["class"].ToString();
+    var list = classes.Split().ToList();
+
+    list.Add("datepicker");
+    dic["class"] = string.Join(" ", list);
+}
+
+@model DateTime?
+@Html.TextBox("", ViewData.TemplateInfo.FormattedModelValue, dic)

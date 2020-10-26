@@ -79,7 +79,7 @@ namespace NorthWindCRUD.Models
         public string PhotoBase64
         {
             get => string.Format("data:image;base64,{0}", Convert.ToBase64String(OleImageUnwrap.GetImageBytesFromOLEField(Photo)));
-            set => Base64Util.TryParseToByteArray(value);
+            set => Photo = value.Contains(",") ? Base64Util.TryParseToByteArray(value.Split(',')[1]) : Base64Util.TryParseToByteArray(value);
         }
 
         [Column(TypeName = "ntext")]
@@ -87,6 +87,10 @@ namespace NorthWindCRUD.Models
 
         [ForeignKey("ReportsEmployee")]
         public int? ReportsTo { get; set; }
+
+        [NotMapped]
+        public int IntReportsTo { get => ReportsTo.HasValue ? ReportsTo.Value : 0; set { if (value == 0) ReportsTo = null; else ReportsTo = value; } }
+
         public virtual Employee ReportsEmployee { get; set; }
 
         [StringLength(255)]

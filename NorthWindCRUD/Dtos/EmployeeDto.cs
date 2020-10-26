@@ -18,7 +18,6 @@ namespace NorthWindCRUD.Dtos
         [Required]
         public int EmployeeID { get; set; }
 
-
         [Required]
         [StringLength(20)]
         public string LastName { get; set; }
@@ -33,10 +32,10 @@ namespace NorthWindCRUD.Dtos
         [StringLength(25)]
         public string TitleOfCourtesy { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
+        [DataType(DataType.Date)]
         public DateTime? BirthDate { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
+        [DataType(DataType.Date)]
         public DateTime? HireDate { get; set; }
 
         [Display(Name = "Name")]
@@ -74,13 +73,16 @@ namespace NorthWindCRUD.Dtos
         [StringLength(4)]
         public string Extension { get; set; }
 
+        [DataType("Base64Image")]
         [Display(Name = "Photo")]
         public string PhotoBase64 { get; set; }
 
         public string Notes { get; set; }
 
-        public int? ReportsTo { get; set; }
-        public virtual Employee ReportsEmployee { get; set; }
+        [Display(Name = "ReportsTo")]
+        public int IntReportsTo { get; set; }
+
+        public virtual EmployeeDto ReportsEmployee { get; set; }
 
         [StringLength(255)]
         public string PhotoPath { get; set; }

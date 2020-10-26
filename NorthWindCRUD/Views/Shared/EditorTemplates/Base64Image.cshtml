@@ -1,0 +1,15 @@
+﻿@{
+    var htmlAttrib = ViewData["htmlAttributes"];
+    IDictionary<string, object> dic = new RouteValueDictionary(htmlAttrib);
+    if (!dic.ContainsKey("id")) { dic.Add("id", ""); }
+}
+
+@model string
+<div>
+    <div style="text-align:center;width:280px">
+        <img id="@dic["id"]" src="@Model" style="max-width:280px" />
+        <input type="file" accept="image/*" onchange="uploadPhoto(event)" style="display: none;" />
+        <input name="@dic["name"]" type="hidden" value="@Model" />
+    </div>
+    <input type="button" class="form-control" value="Browse..." onclick="function c(s) { $(s).prev().find('input[type=&quot;file&quot;]').trigger('click'); }; c(this);" />    
+</div>
