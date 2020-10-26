@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using NorthWindCRUD.Models;
+using AutoMapper;
 
 namespace NorthWindCRUD
 {
@@ -17,5 +19,6 @@ namespace NorthWindCRUD
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿@model NorthWindCRUD.Models.Employee
+﻿@model NorthWindCRUD.Dtos.EmployeeDto
 
 @{
     ViewBag.Title = "Details";
@@ -123,7 +123,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Photo)
+            @Html.DisplayNameFor(model => model.PhotoBase64)
         </dt>
 
         <dd>

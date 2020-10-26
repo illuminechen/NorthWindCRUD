@@ -1,29 +1,23 @@
-namespace NorthWindCRUD.Models
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+﻿using NorthWindCRUD.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 
-    public partial class Employee
+namespace NorthWindCRUD.Dtos
+{
+    public class EmployeeDto
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Employee()
+        public EmployeeDto()
         {
-            Orders = new HashSet<Order>();
+            //Orders = new HashSet<Order>();
         }
 
         [Required]
         public int EmployeeID { get; set; }
 
-        [DisplayName("Name")]
-        public string CommonName
-        {
-            get => TitleOfCourtesy + (string.IsNullOrWhiteSpace(TitleOfCourtesy) ? "" : " ") +
-                  FirstName + ((string.IsNullOrWhiteSpace(FirstName + LastName)) ? "" : " ") + LastName;
-        }
 
         [Required]
         [StringLength(20)]
@@ -39,11 +33,20 @@ namespace NorthWindCRUD.Models
         [StringLength(25)]
         public string TitleOfCourtesy { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? BirthDate { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? HireDate { get; set; }
 
-        [DisplayName("Location")]
+        [Display(Name = "Name")]
+        public string CommonName
+        {
+            get => TitleOfCourtesy + (string.IsNullOrWhiteSpace(TitleOfCourtesy) ? "" : " ") +
+                  FirstName + ((string.IsNullOrWhiteSpace(FirstName + LastName)) ? "" : " ") + LastName;
+        }
+
+        [Display(Name = "Location")]
         public string CommonLocation
         {
             get => City + (string.IsNullOrWhiteSpace(Region) ? "" : ",") +
@@ -71,28 +74,17 @@ namespace NorthWindCRUD.Models
         [StringLength(4)]
         public string Extension { get; set; }
 
-        [Column(TypeName = "image")]
-        public byte[] Photo { get; set; }
-
         [Display(Name = "Photo")]
-        [NotMapped]
-        public string PhotoBase64
-        {
-            get => string.Format("data:image;base64,{0}", Convert.ToBase64String(OleImageUnwrap.GetImageBytesFromOLEField(Photo)));
-            set => Base64Util.TryParseToByteArray(value);
-        }
+        public string PhotoBase64 { get; set; }
 
-        [Column(TypeName = "ntext")]
         public string Notes { get; set; }
 
-        [ForeignKey("ReportsEmployee")]
         public int? ReportsTo { get; set; }
         public virtual Employee ReportsEmployee { get; set; }
 
         [StringLength(255)]
         public string PhotoPath { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order> Orders { get; set; }
+        //public virtual ICollection<Order> Orders { get; set; }
     }
 }
