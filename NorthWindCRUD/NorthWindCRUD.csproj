@@ -163,6 +163,8 @@
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-yeti.css" />
+    <Content Include="Content\bootstrap-yeti.min.css" />
     <Content Include="Images\nopic.png" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
