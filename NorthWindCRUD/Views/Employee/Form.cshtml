@@ -1,9 +1,5 @@
 ﻿@model NorthWindCRUD.ViewModels.EmployeeViewModel
 
-@{
-    ViewBag.Title = "Edit";
-}
-
 <h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm())
@@ -166,6 +162,7 @@
     @Html.ValidationMessageFor(model => model.employeeDto.Notes, "", new { @class = "text-danger" })
 </div>
 @section scripts{
+    <script type="text/javascript" src="~/bundles/jqueryval">
     <script type="text/javascript">
         $(document).ready(function () {
             $(".datepicker").datepicker({

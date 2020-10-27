@@ -39,11 +39,15 @@ namespace NorthWindCRUD.Controllers
             _context.Employees.Where(x => x.EmployeeID != id).ToList().ForEach(
                 x => reportCandidates.Add(new ReportCandidate { ReportToId = x.EmployeeID, ReportToName = x.CommonName }));
 
+
             EmployeeViewModel viewModel = new EmployeeViewModel()
             {
                 employeeDto = mapper.Map<EmployeeDto>(employee),
                 reportCandidates = reportCandidates
             };
+
+            ViewBag.Title = "Edit";
+
             return View("Form", viewModel);
         }
 
@@ -83,6 +87,9 @@ namespace NorthWindCRUD.Controllers
                 employeeDto = mapper.Map<EmployeeDto>(new Employee()),
                 reportCandidates = reportCandidates
             };
+
+            ViewBag.Title = "Create";
+
             return View("Form", viewModel);
         }
 
