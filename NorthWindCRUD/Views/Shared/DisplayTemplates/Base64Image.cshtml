@@ -1,0 +1,12 @@
+﻿@model string
+@{
+    var htmlAttrib = ViewData["htmlAttributes"];
+    IDictionary<string, object> dic = new RouteValueDictionary(htmlAttrib);
+    if (!dic.ContainsKey("id")) { dic.Add("id", ""); }
+    var imgurl = string.IsNullOrEmpty(Model) ? "/Images/nopic.png" : Model;
+    dic["style"] = "max-width:280px;" + dic["style"];
+}
+
+<div style="text-align:center;width:280px">
+    <img id="@dic["id"]" src="@imgurl" style="@dic["style"]" />
+</div>

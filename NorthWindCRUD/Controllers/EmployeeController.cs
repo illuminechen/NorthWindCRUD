@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -33,34 +34,93 @@ namespace NorthWindCRUD.Controllers
             if (!id.HasValue)
                 return RedirectToAction("Index");
             var employee = _context.Employees.FirstOrDefault(x => x.EmployeeID == id);
-            //Dictionary<int, string> dict = new Dictionary<int, string>() { { 0, "-" } };
 
-            //_context.Employees.Where(x => x.EmployeeID != id).ToList().ForEach(x => dict[x.EmployeeID] = x.CommonName);
+            List<ReportCandidate> reportCandidates = new List<ReportCandidate>() { new ReportCandidate { ReportToId = 0, ReportToName = "-" } };
+            _context.Employees.Where(x => x.EmployeeID != id).ToList().ForEach(
+                x => reportCandidates.Add(new ReportCandidate { ReportToId = x.EmployeeID, ReportToName = x.CommonName }));
 
-            EditEmployeeViewModel viewModel = new EditEmployeeViewModel()
+            EmployeeViewModel viewModel = new EmployeeViewModel()
             {
                 employeeDto = mapper.Map<EmployeeDto>(employee),
-                reportCandidates = _context.Employees.Where(x => x.EmployeeID != id).ToDictionary(x => x.EmployeeID, x => x.CommonName)
+                reportCandidates = reportCandidates
             };
-            return View(viewModel);
+            return View("Form", viewModel);
         }
 
         [ActionName("Edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit_Post(EmployeeDto employeeDto)
+        public async Task<ActionResult> Edit_Post(EmployeeDto employeeDto)
         {
-            var employeeInDB = _context.Employees.First(x => x.EmployeeID == employeeDto.EmployeeID);
+            if (ModelState.IsValid)
+            {
+                Update(employeeDto);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            List<ReportCandidate> reportCandidates = new List<ReportCandidate>() { new ReportCandidate { ReportToId = 0, ReportToName = "-" } };
+            _context.Employees.Where(x => x.EmployeeID != employeeDto.EmployeeID).ToList().ForEach(
+                x => reportCandidates.Add(new ReportCandidate { ReportToId = x.EmployeeID, ReportToName = x.CommonName }));
+
+            EmployeeViewModel viewModel = new EmployeeViewModel()
+            {
+                employeeDto = employeeDto,
+                reportCandidates = reportCandidates
+            };
+            return View("Form", viewModel);
+        }
+
+        [HttpGet]
+        public ActionResult Create()
+        {
+            List<ReportCandidate> reportCandidates = new List<ReportCandidate>() { new ReportCandidate { ReportToId = 0, ReportToName = "-" } };
+            _context.Employees.ToList().ForEach(
+                x => reportCandidates.Add(new ReportCandidate { ReportToId = x.EmployeeID, ReportToName = x.CommonName }));
+
+            EmployeeViewModel viewModel = new EmployeeViewModel()
+            {
+                employeeDto = mapper.Map<EmployeeDto>(new Employee()),
+                reportCandidates = reportCandidates
+            };
+            return View("Form", viewModel);
+        }
+
+        [ActionName("Create")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create_Post(EmployeeDto employeeDto)
+        {
+            if (ModelState.IsValid)
+            {
+                Update(employeeDto);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            List<ReportCandidate> reportCandidates = new List<ReportCandidate>() { new ReportCandidate { ReportToId = 0, ReportToName = "-" } };
+            _context.Employees.ToList().ForEach(
+                x => reportCandidates.Add(new ReportCandidate { ReportToId = x.EmployeeID, ReportToName = x.CommonName }));
+
+            EmployeeViewModel viewModel = new EmployeeViewModel()
+            {
+                employeeDto = employeeDto,
+                reportCandidates = reportCandidates
+            };
+            return View("Form", viewModel);
+        }
+
+        private void Update(EmployeeDto employeeDto)
+        {
+            var employeeInDB = _context.Employees.FirstOrDefault(x => x.EmployeeID == employeeDto.EmployeeID);
             if (employeeInDB == null)
             {
-
+                _context.Employees.Add(mapper.Map<Employee>(employeeDto));
             }
             else
             {
                 mapper.Map<EmployeeDto, Employee>(employeeDto, employeeInDB);
             }
-            _context.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -77,7 +137,7 @@ namespace NorthWindCRUD.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete_Post(int? id)
         {
-            if (id.HasValue)
+            if (!id.HasValue)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "id cannot be null");
 
             var employee = _context.Employees.FirstOrDefault(x => x.EmployeeID == id);

@@ -78,8 +78,9 @@ namespace NorthWindCRUD.Models
         [NotMapped]
         public string PhotoBase64
         {
-            get => string.Format("data:image;base64,{0}", Convert.ToBase64String(OleImageUnwrap.GetImageBytesFromOLEField(Photo)));
-            set => Photo = value.Contains(",") ? Base64Util.TryParseToByteArray(value.Split(',')[1]) : Base64Util.TryParseToByteArray(value);
+            get => Photo == null ? ""
+                : string.Format("data:image;base64,{0}", Convert.ToBase64String(OleImageUnwrap.GetImageBytesFromOLEField(Photo)));
+            set => Photo = string.IsNullOrWhiteSpace(value) ? null : Base64Util.TryParseToByteArray(value.Split(',')[1]);
         }
 
         [Column(TypeName = "ntext")]
